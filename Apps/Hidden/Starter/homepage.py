@@ -21,13 +21,14 @@ class Homepage:
         self.appButtonsSelect = []
         self.padding = 80
         self.interfaceDirectory = dir
+        print(dir)
         os.chdir(dir)
         self.interfaceDirectory1 = sys.path
         
 
         self.InterfaceWindow = Tk()
         sizing = sizingAdjust(self.InterfaceWindow, self.Fonts, self.padding)
-        self.data = collect()
+        self.data = collect(self.interfaceDirectory)
         self.padding = sizing.padding
         #print("self.appOffline2", self.data.appsOffline2)
         self.InterfaceWindow.overrideredirect(1)

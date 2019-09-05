@@ -1,15 +1,11 @@
-import gspread
 import os, sys
-from oauth2client.service_account import ServiceAccountCredentials
-import urllib.request
-import sqlite3
-
-import pprint
+import airtable
 
 class collect:
-    def __init__(self):
-        #self.getOnlineRecords()
-        #self.collectDownloadedData()
+    def __init__(self, Dir):
+        self.OriginalDirectory = Dir
+        self.getOnlineRecords()
+        self.collectDownloadedData()
         print("Collecting data...")
 
     def display(self):
@@ -24,88 +20,33 @@ class collect:
 
 
 
-    def getOnlineRecords(self, file):
-        link = "https://raw.githubusercontent.com/dakinfemiwa/Tools/master/Tool2/tool2a.py"
-        fileName = "tool2a.py"
+    def getOnlineRecords(self):
+        os.chdir(self.OriginalDirectory + "\\Apps\\Hidden\\Starter\\Data")
+        sys.path.append(self.OriginalDirectory + "\\Apps\\Hidden\\Starter\\Data")
+        with open("tool1a.pdf", "r") as toolFile:
+            tools = toolFile.readlines()
 
-        urllib.request.urlretrieve(link, fileName)
-
-        from tool2a import Cryptographer
-        Cryptographer.encrypt(file)
-        Cryptographer.decrypt(file)
-
-        with open("tool1a.txt", "r") as accountRead:
-            accountsStr = accountRead.readlines()
-
-        accounts = []
-
-        for account in accountsStr:
-            accountArray = account.split(",")
-            print(accountArray)
-            for data in accountArray:
-                i = accountArray.index(data)
-                if data == "":
-                    accountArray.remove(data)
-                elif "\n" in data:
-                    data = data[0:len(data) - 2]
-                    accountArray[i] = data
-                    if data == "":
-                        accountArray.remove(data)
-            accounts.append(accountArray)
-
-        print()
-        for account in accounts:
-            print(account)
-
-        Cryptographer.encrypt(file)
-
-        os.remove("tool2a.py")"""
-        
-        
-        try:
-            with open("link.pdf", "r") as linkFile:
-                urlA = linkFile.readlines()
-                url = urlA[0]
-        except:
-            pass
-
-        url = "https://raw.githubusercontent.com/dakinfemiwa/Tools/master/Tool1/tool1b.json?token=AGOA24MNPQFJSNFTCZAW2ZC5OEUYW"
-
-        urllib.request.urlretrieve(url, "tool1b.json")
+        for tool in tools:
+            tool.strip("\n")
 
 
-        #Accesses sheet from Google sheets
-        self.scope1 = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
-        self.creds1 = ServiceAccountCredentials.from_json_keyfile_name('tool1b.json', self.scope1)
-        self.client1 = gspread.authorize(self.creds1)
-        self.sheet1 = self.client1.open('GameRecordsSheets').sheet1
-        self.sheet2 = self.client1.open('InterfaceActions').sheet1
+        a = tools[0]
+        b = tools[1]
 
-        os.remove("tool1b.json")
+        from tool2a import encryptText
+        DeCipher = encryptText(a)
+        DeCipher.decrypt()
+        a = DeCipher.plaintext
 
-        #Collects the name of the app and the ID
-        self.appsOnlines1 = self.sheet1.col_values(3)
-        self.gameIDNo = self.sheet1.col_values(1)
+        DeCipher = encryptText(b)
+        DeCipher.decrypt()
+        b = DeCipher.plaintext
 
-        #Variable for the apps online
-        self.appsOnline = []
+        self.usersList = airtable.Airtable(a, "User", b)
+        self.filesList = airtable.Airtable(a, "Files", b)
+        self.appInformation = airtable.Airtable(a, "AppInfo", b)
 
-        #Data containts repeated use of files, so algorithm selecets one name and one gameID
-        j = 0
-        for game in self.appsOnlines1:
-            i = self.appsOnlines1.index(game)
-            if i == j:
-                pass
-            else:
-                self.appsOnline.append([])
-                self.appsOnline[len(self.appsOnline) - 1].append(game)
-                self.appsOnline[len(self.appsOnline) - 1].append(self.gameIDNo[i])
-            j = i
-
-
-
-
-        #print(self.appsOnline)"""
+        os.chdir(self.OriginalDirectory)
 
     def collectDownloadedData(self):
         #Changes directory to the directory of the apps file

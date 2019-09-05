@@ -5,6 +5,7 @@ import os, sys
 
 class startInterface:
     def __init__(self, dir, dir2):
+        self.dir = dir
         sys.path.append(dir2)
         os.chdir(dir2)
 
@@ -15,12 +16,13 @@ class startInterface:
 
     def checkLogin(self):
         from collectAppData import collect
-        self.data = collect()
-        self.data.collectOfflineData
+        self.data = collect(self.dir)
+        #self.data.collectOfflineData
 
     def launchHome(self):
         from homepage import Homepage
-        Homepage(dir)
+        print(self.dir)
+        Homepage(self.dir)
 
 
 
