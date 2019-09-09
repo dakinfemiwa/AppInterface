@@ -37,7 +37,9 @@ class Homepage:
         self.Homepage = True
         self.appsOffline2 = self.data.appsOffline
 
+        os.chdir(self.interfaceDirectory + "\\Apps\\Hidden\\Starter\\Data")
         self.backgroundImg = PhotoImage(file="default.png")
+        os.chdir(self.interfaceDirectory)
 
         self.windowWidth = sizing.width
         self.windowHeight = sizing.height

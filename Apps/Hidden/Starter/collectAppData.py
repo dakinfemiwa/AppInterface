@@ -1,4 +1,5 @@
 import os, sys
+import importlib
 import airtable
 
 class collect:
@@ -25,26 +26,37 @@ class collect:
         sys.path.append(self.OriginalDirectory + "\\Apps\\Hidden\\Starter\\Data")
         with open("tool1a.pdf", "r") as toolFile:
             tools = toolFile.readlines()
+            a = tools[0]
 
-        for tool in tools:
-            tool.strip("\n")
+        with open("tool1b.pdf", "r") as toolFile:
+            tools = toolFile.readlines()
+            b = tools[0]
 
+        #from tool2a import encryptText
 
-        a = tools[0]
-        b = tools[1]
+        c = importlib.import_module("tool2a")
 
-        from tool2a import encryptText
-        DeCipher = encryptText(a)
+        class_ = getattr(c, "encryptText")
+        DeCipher = class_(a)
         DeCipher.decrypt()
-        a = DeCipher.plaintext
+        a = str(DeCipher.plaintext)
 
-        DeCipher = encryptText(b)
+        DeCipher = class_(b)
         DeCipher.decrypt()
-        b = DeCipher.plaintext
+        b = str(DeCipher.plaintext)
+
+        #a = "app3vyBPcNfb9yJY5"
+        tableName = "User"
+        #b = "keyo7Gn0KX5IV0E8v"
 
         self.usersList = airtable.Airtable(a, "User", b)
         self.filesList = airtable.Airtable(a, "Files", b)
         self.appInformation = airtable.Airtable(a, "AppInfo", b)
+
+        self.usersList1 = self.usersList.get_all()
+        self.filesList1 = self.filesList.get_all()
+        self.appInformation1 = self.appInformation.get_all()
+
 
         os.chdir(self.OriginalDirectory)
 
@@ -52,7 +64,7 @@ class collect:
         #Changes directory to the directory of the apps file
         self.Dir = os.getcwd()
 
-        self.DirApps = self.Dir + "\\Apps"
+        self.DirApps = self.OriginalDirectory + "\\Apps"
         os.chdir(self.DirApps)
 
         dataTypes = ["Built-In", "Downloaded"]
@@ -78,4 +90,4 @@ class collect:
         os.chdir(self.Dir)
 
 if __name__ in '__main__':
-    collect()
+    collect("C:/Users/Abisucceed/OneDrive/David2/A LEVEL STUFF/PROGRAMS/Interface")

@@ -15,3 +15,4 @@ class encryptText:
             char = char - 2
             NewLetter = chr(char)
             self.plaintext = self.plaintext + NewLetter
+
